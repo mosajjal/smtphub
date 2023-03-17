@@ -1,4 +1,4 @@
-module github.com/mosajjal/myapp
+module github.com/mosajjal/smtphub
 
 go 1.19
 

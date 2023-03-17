@@ -1,4 +1,4 @@
-package myapp
+package smtphub
 
 import "fmt"
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mosajjal/myapp/cmd"
+	"github.com/mosajjal/smtphub/cmd"
 )
 
 func main() {

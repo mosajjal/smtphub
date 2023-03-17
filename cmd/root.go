@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	myapp "github.com/mosajjal/myapp/pkg"
+	smtphub "github.com/mosajjal/smtphub/pkg"
 	"github.com/rs/zerolog"
 
 	"github.com/spf13/cobra"
@@ -16,11 +16,11 @@ var (
 	cfgFile string
 
 	rootCmd = &cobra.Command{
-		Use:   "myapp",
-		Short: "myapp is awesome",
-		Long:  `myapp is the best CLI ever!`,
+		Use:   "smtphub",
+		Short: "smtphub is awesome",
+		Long:  `smtphub is the best CLI ever!`,
 		Run: func(cmd *cobra.Command, args []string) {
-			myapp.Run()
+			smtphub.Run()
 		},
 	}
 )
