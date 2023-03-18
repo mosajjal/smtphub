@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	smtphub "github.com/mosajjal/smtphub/pkg"
@@ -11,16 +12,18 @@ import (
 	"github.com/spf13/viper"
 )
 
+var config smtphub.Config
+
 var (
 	// Used for flags.
 	cfgFile string
 
 	rootCmd = &cobra.Command{
 		Use:   "smtphub",
-		Short: "smtphub is awesome",
-		Long:  `smtphub is the best CLI ever!`,
+		Short: "smtphub is a CLI tool for creating SMTP hooks",
+		Long:  `smtphub provides a simple lexer to parse SMTP messages (emails) and decide which script to run on them.`,
 		Run: func(cmd *cobra.Command, args []string) {
-			smtphub.Run()
+			smtphub.Run(config)
 		},
 	}
 )
@@ -28,11 +31,7 @@ var (
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// define cli arguments
-	_ = rootCmd.Flags().IntP("number", "n", 7, "What is the magic number?")
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobra.yaml)")
-	// make it required
-	_ = rootCmd.MarkFlagRequired("number")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.smtphub.yaml)")
 
 	// set up logging
 	// set log level
@@ -43,6 +42,7 @@ func init() {
 	}
 
 }
+
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
@@ -55,13 +55,17 @@ func initConfig() {
 		// Search config in home directory with name ".cobra" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".cobra")
+		viper.SetConfigName(".smtphub")
 	}
 
 	viper.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("Error reading config file, %s\n", err)
+	}
+	fmt.Println("Using config file:", viper.ConfigFileUsed())
+	if err := viper.Unmarshal(&config); err != nil {
+		fmt.Println(err)
 	}
 }
 

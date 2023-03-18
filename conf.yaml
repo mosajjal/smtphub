@@ -1,0 +1,31 @@
+server:
+  listen: "0.0.0.0:1025"
+  useTLS: false
+  tlsCert: ""
+  tlsKey: ""
+  appName: "MailHog"
+  hostname: "localhost"
+  auth:
+    allowAnon: true
+    users:
+      - username: "user1"
+        password: "pass1"
+      - username: "user2"
+        password: "pass2"
+   
+hooks:
+  - name: "hook1"
+    conditions:
+      - subject: ".*? test1 .*?"
+      # - body: ".*? test2 .*?"
+      # - from: ".*? test3 .*?"
+      # - to: ".*? test4 .*?"
+      # - remoteAddr: ".*? test5 .*?"
+    actions:
+      - type: exec
+        command: "sleep 1; echo '{{.Subject}}' '{{.Body}}' '{{.From}}' '{{.To}}' '{{.RemoteAddr}}'"
+        timeout: 2s
+        env:
+          - name: "TEST"
+            value: "test"
+  
