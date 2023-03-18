@@ -56,7 +56,7 @@ The conditions specified for each hook are connected with an AND logic operator.
 
 ### Step 1: Get a VPS from Vultr
 
-Firstly, you need to purchase a VPS (Virtual Private Server) from a provider like Vultr. You will be given an IP address for the VPS upon creation. Make a note of this IP address as you will need it for the next steps.
+Firstly, you need to purchase a VPS (Virtual Private Server) from a provider like Vultr. You will be given an IP address for the VPS upon creation. Make a note of this IP address as you will need it for the next steps. Keep in mind that port 25 inbound and outbound is blocked by default on Vultr VPSes. You will need to open a support ticket to have this port unblocked.
 
 ### Step 2: Set up subdomain and MX records
 
