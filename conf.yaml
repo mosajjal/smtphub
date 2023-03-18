@@ -6,7 +6,7 @@ server:
   appName: "MailHog"
   hostname: "localhost"
   auth:
-    allowAnon: true
+    allowAnon: false
     users:
       - username: "user1"
         password: "pass1"

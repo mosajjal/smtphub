@@ -10,14 +10,14 @@ type Config struct {
 		TLSKey   string `yaml:"tlsKey"`
 		AppName  string `yaml:"appName"`
 		Hostname string `yaml:"hostname"`
+		Auth     struct {
+			AllowAnon bool `yaml:"allowAnon"`
+			Users     []struct {
+				Username string `yaml:"username"`
+				Password string `yaml:"password"`
+			} `yaml:"users"`
+		} `yaml:"auth"`
 	} `yaml:"server"`
-	Auth struct {
-		AllowAnon bool `yaml:"allowAnon"`
-		Users     []struct {
-			Username string `yaml:"username"`
-			Password string `yaml:"password"`
-		} `yaml:"users"`
-	} `yaml:"auth"`
 	Hooks []Hook `yaml:"hooks"`
 }
 

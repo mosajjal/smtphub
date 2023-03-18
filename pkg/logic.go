@@ -2,6 +2,8 @@ package smtphub
 
 import (
 	"context"
+	"crypto/hmac"
+	"crypto/md5"
 	"fmt"
 	"log"
 	"net"
@@ -134,12 +136,25 @@ var handler = smtpd.Handler(func(remoteAddr net.Addr, from string, to []string, 
 })
 
 var authHandler = smtpd.AuthHandler(func(remoteAddr net.Addr, mechanism string, username []byte, password []byte, shared []byte) (bool, error) {
-	if config.Auth.AllowAnon {
+	if config.Server.Auth.AllowAnon {
 		return true, nil
 	}
-	for _, user := range config.Auth.Users {
-		if user.Username == string(username) && user.Password == string(password) {
-			return true, nil
+
+	switch mechanism {
+	case "LOGIN", "PLAIN":
+		for _, user := range config.Server.Auth.Users {
+			if user.Username == string(username) && user.Password == string(password) {
+				return true, nil
+			}
+		}
+	case "CRAM-MD5":
+		for _, user := range config.Server.Auth.Users {
+			h := hmac.New(md5.New, []byte(user.Password))
+			h.Write(shared)
+			hash := h.Sum(nil)
+			if user.Username == string(username) && fmt.Sprintf("%x", hash) == string(password) {
+				return true, nil
+			}
 		}
 	}
 	return false, nil
@@ -154,6 +169,7 @@ func Run(c Config) {
 		Addr:        config.Server.Listen,
 		Appname:     config.Server.AppName,
 		AuthHandler: authHandler,
+		AuthMechs:   map[string]bool{"LOGIN": true, "PLAIN": true, "CRAM-MD5": true},
 		Handler:     handler,
 		Hostname:    config.Server.Hostname,
 	}
